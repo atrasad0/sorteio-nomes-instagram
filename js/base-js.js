@@ -297,6 +297,10 @@ function getRandom (range) {
  * @param {int} value A versao deste novo banco de dados.
  */
 function criarBanco (value) {
+    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    if (!window.indexedDB) {
+        errorAlert("Seu Navegador não suporta o IndexedDb");
+    }
 
     var openReq = window.indexedDB.open(DB_NAME, value);
 
