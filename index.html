@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+     <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Oxygen:300&display=swap" rel="stylesheet">
+    <link rel='stylesheet' type='text/css' media='screen' href='bootstrap/css/bootstrap.min.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/base-css.css'>
+
+</head>
+    <body>
+        <div class="container mt-5">
+          <h3 class="text-center mb-3">Sorteio TrendyShoes</h3>
+          <div class="alert alert-danger" id="errorAlert" role="alert" style="display:none;"></div>
+          <br>
+          <div id="options">
+            <form OnSubmit="javascript:cancelaSubmit(event);">
+                <input id="btnAdd" type="search" autocomplete="off" value="@">
+                <div onclick="salvaNome()">
+                    <i class="fa fa-plus"></i>
+                </div>
+            </form>
+            <button type="button" class="btn btn-info" onclick="help()" title="Descrição do funcionamento do sistema.">Help</button>
+            <button type="button" class="btn btn-dark" onclick="sortear()" title="Sortea uma pessoa da lista.">Sortear</button>
+            <button type="button" class="btn btn-success" onclick="scrollToWinners()">Ganhadores</button>
+            
+          </div>
+          <br>
+          
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr class="bg-dark text-white">
+                  <th scope="col">#ID</th>
+                  <th scope="col">Instagram</th>
+                  <th scope="col">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tBodytblNomes">
+                 <!--O conteudo é gerado dinamicamente, veja no arquivo base-js.js-->
+              </tbody>
+            </table>
+          </div>
+          <br><br>
+          <br><br>
+          <h3 class="text-center mb-3">Sorteados <span id="ganhadoresData"></span></h3>
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr class="bg-dark text-white">
+                  <th scope="col">#ID</th>
+                  <th scope="col">Instagram</th>
+                </tr>
+              </thead>
+              <tbody id="tBodytblGanhadores">
+                <!--O conteudo é gerado dinamicamente, veja no arquivo base-js.js-->
+              </tbody>
+            </table>
+          </div>
+        </div>  
+        </div>
+    </body>
+
+        <script src='jquery/jquery.js'></script>
+        <script src='js/swal/sweetalert.min.js'></script>
+        <script src='bootstrap/js/bootstrap.min.js'></script>
+        <script src='js/base-js.js'></script>
+    </body>
+</html>

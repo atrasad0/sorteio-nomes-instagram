@@ -1,0 +1,15 @@
+body {
+  font: 300 14px/1.5 'Oxygen', sans-serif;
+}
+
+.table td,
+.table th {
+  padding: 20px;
+}
+
+.tooltip .arrow:before {
+  border-left-color: #dc3545;
+}
+.tooltip .tooltip-inner {
+  background: #dc3545;
+}
