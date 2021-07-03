@@ -25,7 +25,7 @@ function cancelaSubmit(e) {
 
 function help() {
     var text = '';
-    text+= '- Os nomes ficarão salvos na máquina do usuário até que o mesmo limpe o cache do navegador.\n\n';
+    text+= '- Os nomes são salvos na máquina do usuário até que o mesmo limpe os dados do navegador.\n\n';
     text+= '- Uma pessoa poderá ser sorteada apenas uma vez por turno, ou a menos que o usuário atualize a pagina.\n\n';
     text+= '- Um ganhador será movido para uma da lista de sorteados deste turno.\n\n';
     text+= '- Uma pessoa não será removida da lista ao ser sorteada, pois o mesmo poderá não ter cumprido os requisitos mínimos para ganhar o sorteio, podendo assim ser sorteada no próximo mês.\n\n';
@@ -149,7 +149,7 @@ function salvaNome() {
     let name = elem.value;
     name = name.replace(/\s/g, '');
 
-    if (name.length < 2) {
+    if (name.length < 3) {
         swal("Atenção!", "Um @ deve ter 2 ou mais caracteres", "warning")
         return;
     }

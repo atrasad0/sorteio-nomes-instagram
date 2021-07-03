@@ -1,7 +1,7 @@
 # sorteio-nomes-instagram
 Sorteia nomes em uma tabela gerada dinâmicamente com nomes armazenados no indexedDB
 
-- Os nomes ficarão salvos na máquina do usuário até que o mesmo limpe o cache do navegador.
+- Os nomes são salvos na máquina do usuário até que o mesmo limpe os dados do navegador.
 
 - Uma pessoa poderá ser sorteada apenas uma vez por turno, ou a menos que o usuário atualize a pagina.
 
