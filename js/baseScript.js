@@ -15,7 +15,22 @@ var MSG_ERROR_CONNECTION =  "Não foi possivel abrir uma transação com indexed
 
 $(document).ready(function() {
     criarBanco(1);
-    
+
+    /* Filtro dinâmico para a tabela de nomes.*/
+    $("#btnFilter").keyup(function() {
+        var filter = $(this).val().toUpperCase().toString();
+        $('#tableNames tr > #name').each(function() {
+            let parentId = this.parentElement.id;
+            let name = this.outerText.toUpperCase().toString();
+
+            if (name.indexOf(filter) == -1) {
+                $(`#${parentId}`).hide();
+            } else 
+                $(`#${parentId}`).show();
+
+        });
+    });
+ 
 });
 
 function cancelaSubmit(e) {
@@ -67,11 +82,11 @@ function carregaRecursos() {
         var tabela = $("#tBodytblNomes");
         var row ='';
         for (let i = 0; i < names.length; i++) {
-             row += `<tr>
+             row += `<tr id="row${names[i].id}">
                         <th scope="row"> 
                             ${names[i].id}
                         </th>
-                        <td> 
+                        <td id="name"> 
                             ${names[i].Keyname}
                         </td>
                         <td>
@@ -130,6 +145,13 @@ function errorAlert(msg) {
     error.css("display", "block");
 
     error.html(msg)
+}
+
+function filtra () {
+    debugger;
+    let elem = document.getElementById("btnFilter");
+    let name = elem.value;
+    console.log(name);
 }
 
 /**
