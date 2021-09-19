@@ -14,6 +14,8 @@ var sorteados = [];
 var MSG_ERROR_CONNECTION =  "Não foi possivel abrir uma transação com indexedDb";
 
 $(document).ready(function() {
+    addLoading();
+
     criarBanco(1);
 
     /* Filtro dinâmico para a tabela de nomes.*/
@@ -27,10 +29,10 @@ $(document).ready(function() {
                 $(`#${parentId}`).hide();
             } else 
                 $(`#${parentId}`).show();
-
         });
     });
- 
+
+    removeLoading();
 });
 
 function cancelaSubmit(e) {
@@ -147,11 +149,24 @@ function errorAlert(msg) {
     error.html(msg)
 }
 
-function filtra () {
-    debugger;
-    let elem = document.getElementById("btnFilter");
-    let name = elem.value;
-    console.log(name);
+function addLoading () {
+    $("#divLoading").addClass("loading");
+    $("#divSpin").addClass("spin");
+}
+
+function removeLoading () {
+    $("#divLoading").removeClass("loading");
+    $("#divSpin").removeClass("spin");
+}
+
+function wait(ms) {
+    console.log(`inicializando wait de ${ms} ms`);
+    var start = new Date().getTime();
+    var end = start;
+    while(end < start + ms) {
+        end = new Date().getTime();
+    }
+    console.log("finalizado wait");
 }
 
 /**
@@ -232,19 +247,23 @@ function excluiNome(value) {
  *
  */
 function sortear() {
+    addLoading();
     var connection = getConnectionObjectStore(OBJECT_STORE_NAME, READ_SCOPE);
 
     if (!connection) {
+        removeLoading();
         errorAlert(MSG_ERROR_CONNECTION);
         console.log(MSG_ERROR_CONNECTION);
         return;
     }
 
     var objStore = connection.objectStore(OBJECT_STORE_NAME);
-    
+
     let names =  objStore.getAll();
 
     connection.oncomplete = e => {
+        removeLoading();
+
         if (names.result.length == 0) {
             swal("Atenção!", "Cadastre alguns nomes para realizar o sorteio.", "warning");
             return;
@@ -270,6 +289,7 @@ function sortear() {
     }
     
     connection.onerror = e => {
+        removeLoading();
         errorAlert(e.target.error);
         console.log(e.target.error)
     }
