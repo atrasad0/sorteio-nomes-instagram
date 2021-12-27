@@ -59,10 +59,12 @@ function help() {
  * Carrega em uma tabela todos os nomes salvos no indexedDB.
  * @returns A tabela no index.html.
  */
-function carregaRecursos() {
-    var connection = getConnectionObjectStore(OBJECT_STORE_NAME, READ_SCOPE);
+async function carregaRecursos() {
+    addLoading();
+    var connection = await getConnectionObjectStore(OBJECT_STORE_NAME, READ_SCOPE);
 
     if (!connection) {
+        removeLoading();
         errorAlert(MSG_ERROR_CONNECTION);
         console.log(MSG_ERROR_CONNECTION);
         return;
@@ -74,6 +76,7 @@ function carregaRecursos() {
     var tabela = $("#tBodytblNomes");
 
     connection.oncomplete = e => {
+        removeLoading();
         if (reqNames.result.length == 0) {
             var tabela = $("#tBodytblNomes").html('');
             return;
@@ -101,6 +104,7 @@ function carregaRecursos() {
 
 
     connection.onerror = e => {
+        removeLoading();
         errorAlert(e.target.error);
         console.log(e.target.error)
     }
@@ -159,24 +163,20 @@ function removeLoading () {
     $("#divSpin").removeClass("spin");
 }
 
-function wait(ms) {
-    console.log(`inicializando wait de ${ms} ms`);
-    var start = new Date().getTime();
-    var end = start;
-    while(end < start + ms) {
-        end = new Date().getTime();
-    }
-    console.log("finalizado wait");
+function sleep(ms) {
+    console.log(`inicializando sleep de ${ms} ms`);
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
  * Salva um nome no indexedDB
  */
-function salvaNome() {
-
-    var connection = getConnectionObjectStore(OBJECT_STORE_NAME, READ_WRITE_SCOPE);
+async function salvaNome() {
+    addLoading();
+    var connection = await getConnectionObjectStore(OBJECT_STORE_NAME, READ_WRITE_SCOPE);
 
     if (!connection) {
+        removeLoading();
         errorAlert(MSG_ERROR_CONNECTION);
         console.log(MSG_ERROR_CONNECTION);
         return;
@@ -196,12 +196,14 @@ function salvaNome() {
     objStore.add({Keyname: name});
 
     connection.oncomplete = e => {
+        removeLoading();
         console.log('saved name');
         carregaRecursos();
        
     }
     
     connection.onerror = e => {
+        removeLoading();
         errorAlert(e.target.error);
         console.log(e.target.error);
     }
@@ -214,13 +216,14 @@ function salvaNome() {
  * Exclui um nome do indexedDB.
  * @param {string} value O ID de identificação do nome no indexedDB.
  */
-function excluiNome(value) {
+async function excluiNome(value) {
 
     let index = parseInt(value);
-    
-    var connection = getConnectionObjectStore(OBJECT_STORE_NAME, READ_WRITE_SCOPE);
+    addLoading();
+    var connection = await getConnectionObjectStore(OBJECT_STORE_NAME, READ_WRITE_SCOPE);
 
     if (!connection) {
+        removeLoading();
         errorAlert(MSG_ERROR_CONNECTION)
         console.log(MSG_ERROR_CONNECTION);
         return; 
@@ -230,12 +233,14 @@ function excluiNome(value) {
     objStore.delete(index);
 
     connection.oncomplete = e => {
+        removeLoading();
         console.log('deleted name');
         carregaRecursos();
        
     }
     
     connection.onerror = e => {
+        removeLoading();
         errorAlert(e.target.error);
         console.log(e.target.error)
     }
@@ -246,9 +251,10 @@ function excluiNome(value) {
  * Sorteia um índice em um array de nomes, onde o mesmo não poderá ser sorteado mais de uma vez. 
  *
  */
-function sortear() {
+async function sortear() {
     addLoading();
-    var connection = getConnectionObjectStore(OBJECT_STORE_NAME, READ_SCOPE);
+
+    var connection = await getConnectionObjectStore(OBJECT_STORE_NAME, READ_SCOPE);
 
     if (!connection) {
         removeLoading();
@@ -261,7 +267,8 @@ function sortear() {
 
     let names =  objStore.getAll();
 
-    connection.oncomplete = e => {
+    connection.oncomplete = async e => {
+        await sleep(800);
         removeLoading();
 
         if (names.result.length == 0) {
@@ -338,7 +345,7 @@ function getRandom (range) {
  * Cria um novo banco de dados.
  * @param {int} value A versao deste novo banco de dados.
  */
-function criarBanco (value) {
+async function criarBanco (value) {
     window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     if (!window.indexedDB) {
         errorAlert("Seu Navegador não suporta o IndexedDb");
@@ -353,13 +360,13 @@ function criarBanco (value) {
         indexConnection.createObjectStore(OBJECT_STORE_NAME, { keyPath: "id", autoIncrement : true })
     };
 
-    openReq.onsuccess = e => {
+    openReq.onsuccess = e  => {
         console.log("indexedDb Ready.");
         dataBase = e.target.result;
         carregaRecursos();
     };
 
-    openReq.onerror = e => {
+    openReq.onerror = e  => {
         errorAlert(MSG_ERROR_CONNECTION);
         console.log(e.target.error())
 
@@ -372,7 +379,7 @@ function criarBanco (value) {
  * @param {*} object O Scopo do objectStore.
  * @returns A transação com o objectStore.
  */
-function getConnectionObjectStore(object, scope) {
+async function getConnectionObjectStore(object, scope) {
     var connection = dataBase.transaction([object], scope);
     return connection;
 
